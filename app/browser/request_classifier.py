@@ -26,6 +26,8 @@ PERPLEXITY_PROMPT_PATH_PATTERNS = (
     "/rest/query",
     "/socket.io",
     "/api/graphql",
+    "/rest/perplexity_ask",
+    "/rest/sse/perplexity_ask",
 )
 
 # Storage endpoints and CDN hosts receiving actual uploaded file bytes

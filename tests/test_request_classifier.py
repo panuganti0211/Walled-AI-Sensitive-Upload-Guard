@@ -93,3 +93,45 @@ class TestRequestClassifier:
         candidate_dict = candidate.__dict__
         assert "Authorization" not in str(candidate_dict)
         assert "secret_token" not in str(candidate_dict)
+
+    def test_classify_perplexity_sse_prompt_candidate(self):
+        """Verify Perplexity SSE streaming inference POST is classified as prompt."""
+        candidate = classify_request(
+            url="https://www.perplexity.ai/rest/sse/perplexity_ask",
+            method="POST",
+            headers={"Content-Type": "application/json"},
+            has_post_data=True,
+            request_id="req-perp-sse-1",
+        )
+        assert candidate.platform == "Perplexity"
+        assert candidate.request_type == "prompt"
+        assert candidate.is_candidate_prompt is True
+        assert candidate.is_candidate_upload is False
+
+    def test_classify_perplexity_graphql_prompt_candidate(self):
+        """Verify modern Perplexity GraphQL query POST is classified as prompt."""
+        candidate = classify_request(
+            url="https://www.perplexity.ai/rest/perplexity_ask/graphql",
+            method="POST",
+            headers={"Content-Type": "application/json"},
+            has_post_data=True,
+            request_id="req-perp-gql-1",
+        )
+        assert candidate.platform == "Perplexity"
+        assert candidate.request_type == "prompt"
+        assert candidate.is_candidate_prompt is True
+        assert candidate.is_candidate_upload is False
+
+    def test_classify_perplexity_telemetry_not_prompt(self):
+        """Verify Perplexity analytics/telemetry POST is not classified as prompt."""
+        candidate = classify_request(
+            url="https://www.perplexity.ai/rest/event/analytics",
+            method="POST",
+            headers={"Content-Type": "application/json"},
+            has_post_data=True,
+            request_id="req-perp-telemetry-1",
+        )
+        assert candidate.platform == "Perplexity"
+        assert candidate.request_type == "other"
+        assert candidate.is_candidate_prompt is False
+        assert candidate.is_candidate_upload is False
