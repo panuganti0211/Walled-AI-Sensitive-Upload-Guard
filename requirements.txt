@@ -1,0 +1,11 @@
+# Core Desktop GUI
+PySide6>=6.8.0
+
+# Document & Image Processing
+PyMuPDF>=1.24.0
+Pillow>=10.0.0
+pytesseract>=0.3.10
+
+# Testing
+pytest>=8.0.0
+pytest-qt>=4.4.0
